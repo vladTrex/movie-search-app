@@ -1,34 +1,24 @@
 import React, { PureComponent } from 'react';
-import PropTypes from 'prop-types';
 import Grid from '@material-ui/core/Grid';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import Emoticon from '@material-ui/icons/InsertEmoticon';
-import { withStyles } from '@material-ui/core/styles';
 
 import TableComponent from './partial/TableComponent';
-
+import Controls from './partial/Controls';
 import { API_URL } from '../constants/app';
 
 const initialState = {
   title: '',
   searchResult: [],
   page: 0,
-  pending: false,
+  isPending: false,
   resultLength: 0,
   searched: false,
 };
 
-const styles = () => ({
-  button: {
-    marginRight: '2px',
-  },
-});
-
 class Home extends PureComponent {
   state = initialState;
 
-  handleChange = event => {
+  handleTitleChange = event => {
     this.setState({
       title: event.target.value,
     });
@@ -42,7 +32,7 @@ class Home extends PureComponent {
     const { title } = this.state;
 
     this.setState({
-      pending: true,
+      isPending: true,
       searched: true,
     });
 
@@ -57,11 +47,11 @@ class Home extends PureComponent {
 
       this.setState({
         searchResult: result.Search,
-        pending: false,
+        isPending: false,
         resultLength: result.totalResults,
       });
     } catch (e) {
-      this.setState({ pending: false });
+      this.setState({ isPending: false });
       throw new Error();
     }
   };
@@ -69,7 +59,7 @@ class Home extends PureComponent {
     this.setState(initialState);
   };
   renderTable = () => {
-    const { searchResult, page, resultLength, pending } = this.state;
+    const { searchResult, page, resultLength, isPending } = this.state;
 
     if (!resultLength || resultLength < 1) return <h2>No search result</h2>;
 
@@ -78,55 +68,30 @@ class Home extends PureComponent {
         movies={searchResult}
         page={page}
         moviesLength={resultLength}
-        pending={pending}
+        isPending={isPending}
         onChangePage={this.handleChangePage}
       />
     );
   };
 
   render() {
-    const { pending, resultLength, searched, title } = this.state;
-    const { classes } = this.props;
-
+    const { isPending, resultLength, searched, title } = this.state;
+    
     return (
       <Grid container spacing={24}>
         <Grid item xs={3}>
           Search results: {resultLength || 0}
-          <div>
-            <TextField
-              id="movie-title"
-              fullWidth
-              value={title}
-              label="Movie title"
-              onChange={this.handleChange}
-              margin="normal"
+          <Controls 
+            onTitleChange={this.handleTitleChange}
+            onDataFetch={() => this.onFetchMovies(0)}
+            onClearControls={this.clearSearch}
+            title={title} 
+            isPending={isPending} 
             />
-          </div>
-          <div>
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="primary"
-              disabled={pending}
-              onClick={() => this.onFetchMovies(0)}
-            >
-              Fetch Movies
-            </Button>
-
-            <Button
-              className={classes.button}
-              variant="contained"
-              color="secondary"
-              onClick={this.clearSearch}
-            >
-              Clear
-            </Button>
-          </div>
         </Grid>
         <Grid item xs={9}>
           {!searched ? (
             <h3>
-              {' '}
               <Emoticon /> Movie search application. Try to find interesting
               movies.
             </h3>
@@ -139,8 +104,4 @@ class Home extends PureComponent {
   }
 }
 
-Home.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-export default withStyles(styles)(Home);
+export default Home;

@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, Fragment} from 'react';
 import PropTypes from 'prop-types';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -10,10 +10,25 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 class TableComponent extends PureComponent {
     render(){
-        const {movies, page, moviesLength, pending, onChangePage} = this.props;
+        const {movies, page, moviesLength, isPending, onChangePage} = this.props;
 
         return(
-          <div>
+          <Fragment>
+            {isPending && <LinearProgress color="secondary" />}
+            <TablePagination
+              component="div"
+              count={parseInt(moviesLength)}
+              rowsPerPage={10}
+              rowsPerPageOptions={[]}
+              page={page}
+              backIconButtonProps={{
+                'aria-label': 'Previous Page',
+              }}
+              nextIconButtonProps={{
+                'aria-label': 'Next Page',
+              }}
+              onChangePage={onChangePage}
+            />
             <Table>
               <TableHead>
                 <TableRow>
@@ -40,22 +55,7 @@ class TableComponent extends PureComponent {
                   ))}
               </TableBody>
             </Table>
-            {pending && <LinearProgress color="secondary" />}
-            <TablePagination
-                component="div"
-                count={parseInt(moviesLength)}
-                rowsPerPage={10}
-                rowsPerPageOptions={[]}
-                page={page}
-                backIconButtonProps={{
-                  'aria-label': 'Previous Page',
-                }}
-                nextIconButtonProps={{
-                  'aria-label': 'Next Page',
-                }}
-                onChangePage={onChangePage}
-              />
-          </div>);
+          </Fragment>);
     }
 }
 
@@ -64,7 +64,7 @@ TableComponent.propTypes = {
     page: PropTypes.number,
     moviesLength: PropTypes.string,
     onChangePage: PropTypes.func,
-    pending: PropTypes.bool,
+    isPending: PropTypes.bool,
 };
 
 export default TableComponent;
