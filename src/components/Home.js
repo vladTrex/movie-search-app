@@ -13,15 +13,18 @@ const initialState = {
   isPending: false,
   resultLength: 0,
   searched: false,
+  year: '',
 };
 
 class Home extends PureComponent {
   state = initialState;
 
-  handleTitleChange = event => {
-    this.setState({
-      title: event.target.value,
-    });
+  handleFieldChange = fieldName => {
+    return event => {
+      return this.setState({
+        [fieldName]: event.target.value,
+      });
+    }
   };
 
   handleChangePage = (event, page) => {
@@ -29,7 +32,7 @@ class Home extends PureComponent {
   };
 
   onFetchMovies = async page => {
-    const { title } = this.state;
+    const { title, year } = this.state;
 
     this.setState({
       isPending: true,
@@ -39,9 +42,9 @@ class Home extends PureComponent {
     try {
       const url =
         page === 0
-          ? `${API_URL}&s=${title}`
-          : `${API_URL}&s=${title}&page=${page}`;
-
+          ? `${API_URL}&s=${title}&y=${year}`
+          : `${API_URL}&s=${title}&page=${page}&y=${year}`;
+      
       const response = await fetch(url);
       const result = await response.json();
 
@@ -55,9 +58,11 @@ class Home extends PureComponent {
       throw new Error();
     }
   };
+
   clearSearch = () => {
     this.setState(initialState);
   };
+
   renderTable = () => {
     const { searchResult, page, resultLength, isPending } = this.state;
 
@@ -75,17 +80,24 @@ class Home extends PureComponent {
   };
 
   render() {
-    const { isPending, resultLength, searched, title } = this.state;
+    const { 
+      isPending, 
+      resultLength, 
+      searched, 
+      title, 
+      year 
+    } = this.state;
     
     return (
       <Grid container spacing={24}>
         <Grid item xs={3}>
           Search results: {resultLength || 0}
           <Controls 
-            onTitleChange={this.handleTitleChange}
+            onTitleChange={this.handleFieldChange}
             onDataFetch={() => this.onFetchMovies(0)}
             onClearControls={this.clearSearch}
             title={title} 
+            year={year}
             isPending={isPending} 
             />
         </Grid>
