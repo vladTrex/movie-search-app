@@ -24,7 +24,7 @@ class Home extends PureComponent {
       return this.setState({
         [fieldName]: event.target.value,
       });
-    }
+    };
   };
 
   handleChangePage = (event, page) => {
@@ -44,7 +44,7 @@ class Home extends PureComponent {
         page === 0
           ? `${API_URL}&s=${title}&y=${year}`
           : `${API_URL}&s=${title}&page=${page}&y=${year}`;
-      
+
       const response = await fetch(url);
       const result = await response.json();
 
@@ -80,26 +80,20 @@ class Home extends PureComponent {
   };
 
   render() {
-    const { 
-      isPending, 
-      resultLength, 
-      searched, 
-      title, 
-      year 
-    } = this.state;
-    
+    const { isPending, resultLength, searched, title, year } = this.state;
+
     return (
       <Grid container spacing={24}>
         <Grid item xs={3}>
           Search results: {resultLength || 0}
-          <Controls 
-            onTitleChange={this.handleFieldChange}
+          <Controls
+            onFieldChange={this.handleFieldChange}
             onDataFetch={() => this.onFetchMovies(0)}
             onClearControls={this.clearSearch}
-            title={title} 
+            title={title}
             year={year}
-            isPending={isPending} 
-            />
+            isPending={isPending}
+          />
         </Grid>
         <Grid item xs={9}>
           {!searched ? (

@@ -17,7 +17,7 @@ class Controls extends PureComponent {
             title, 
             year,
             isPending, 
-            onTitleChange, 
+            onFieldChange, 
             onDataFetch,
             onClearControls,
         } = this.props;
@@ -30,7 +30,7 @@ class Controls extends PureComponent {
               fullWidth
               value={title}
               label="Movie title"
-              onChange={onTitleChange('title')}
+              onChange={onFieldChange('title')}
               margin="normal"
             />
             </div>
@@ -40,7 +40,7 @@ class Controls extends PureComponent {
                 fullWidth
                 value={year}
                 label="Movie year"
-                onChange={onTitleChange('year')}
+                onChange={onFieldChange('year')}
                 margin="normal"
             />
             </div>
@@ -74,8 +74,9 @@ Controls.propTypes = {
     title: PropTypes.string,
     year: PropTypes.string,
     isPending: PropTypes.bool,
-    onTitleChange: PropTypes.func,
+    onFieldChange: PropTypes.func,
     onDataFetch: PropTypes.func,
     onClearControls: PropTypes.func,
 };
+
 export default withStyles(styles)(Controls);
