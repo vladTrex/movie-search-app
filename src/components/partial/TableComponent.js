@@ -8,6 +8,8 @@ import TableRow from '@material-ui/core/TableRow';
 import TablePagination from '@material-ui/core/TablePagination';
 import LinearProgress from '@material-ui/core/LinearProgress';
 
+import {capitalizeMovieType} from '../../helpers';
+
 class TableComponent extends PureComponent {
     render(){
         const {movies, page, moviesLength, isPending, onChangePage} = this.props;
@@ -52,7 +54,7 @@ class TableComponent extends PureComponent {
                     <TableCell component="th" scope="row">
                       <a href={`https://www.imdb.com/title/${movie.imdbID}/`}>{movie.Title}</a>
                     </TableCell>
-                    <TableCell>{movie.Type.charAt(0).toUpperCase()+movie.Type.slice(1)}</TableCell>
+                    <TableCell>{capitalizeMovieType(movie.Type)}</TableCell>
                     <TableCell align="right">{movie.Year}</TableCell>
                   </TableRow>
                   ))}
