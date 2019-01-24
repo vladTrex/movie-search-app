@@ -43,7 +43,10 @@ class TableComponent extends PureComponent {
                   <TableRow key={movie.imdbID}>
                     <TableCell align="left">
                       <a href={`https://www.imdb.com/title/${movie.imdbID}/`}>
-                        <img src={movie.Poster} height="120px" alt={movie.Title} />
+                        <img 
+                          src={movie.Poster === 'N/A' ? './assets/Placeholder.jpg' : movie.Poster} 
+                          height="120px" 
+                          alt={movie.Title} />
                       </a>
                     </TableCell>
                     <TableCell component="th" scope="row">
